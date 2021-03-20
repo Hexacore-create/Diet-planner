@@ -222,7 +222,7 @@ let packet1 = document.getElementById("t1").value;
 let extract1 = document.getElementById("t10").value;
 let retrieve1 = dataset.find(element=>element.food===packet1); ///data manipulation
 
-var result1= (retrieve1.cal * extract1); //result (part 1)
+let result1= (retrieve1.cal * extract1); //result (part 1)
 
 let packet2 = document.getElementById("t2").value;
 let extract2 = document.getElementById("t20").value;
@@ -242,20 +242,16 @@ console.log(final); //console
 
 document.getElementById('h7').innerHTML=(final +','+'is the total calorie content');//html
 
+let transform = document.getElementById('h7');
+
+if(transform.value=null){
+   return 0;
+}
+else{
+   transform.classList.add('h7postcalc');
+}
 }
 retrieve();
-
-function transform(){
-  var transform = document.getElementById('h7');
-
-  if(transform.value=null){
-   return 0;
-  }
-  else{
-   transform.classList.add('h7postcalc');
-  }
-}
-transform();
 
 function displayHide() {
         document.getElementById("pn4").style.display = "none";
@@ -311,7 +307,7 @@ hide();
 <br>
 <br>
 <div class = " w3-panel w3-round" id = "pn7">
-  <button id = "btn1" class =" w3-teal w3-circle w3-myfont" onclick="retrieve();transform();"><h4>=</h4></button>
+  <button id = "btn1" class =" w3-teal w3-circle w3-myfont" onclick="retrieve()"h4>=</h4></button>
   <button id = "btn2" class ="w3-green w3-circle w3-myfont" onclick="show()"><h4>+</h4></button>
 </div>
   <div class = "w3-panel w3-white filler" >
@@ -333,3 +329,4 @@ hide();
     </div>
 </div>
 </div>
+
