@@ -56,7 +56,7 @@
      color:black;
      font-size:18px;
    }
-   element[id^="rcorners1"] {
+   .rcorners1 {
     border-radius: 25px ;
     background:white;
     border:5px solid #143C5B;
@@ -64,13 +64,32 @@
     float:left;
     background-image:linear-gradient(#FFFF 30%,#87CE9E);
   }
-  element[id^="rcorners2"]{
+  .rcorners2{
    border-radius: 25px ;
    background:white;
    border:5px solid #143C5B;
    padding: 20px;
    float:right;
    background-image:linear-gradient(#FFFF 30%,#87CE9E);
+ }
+ @media(max-width:600px){
+   .rcorners1 {
+     width:200px;
+   }
+   .rcorners2{
+     width:200px;
+   }
+   .tbox{
+     width:80px;
+   }
+ }
+ @media(min-width:1000px){
+   .rcorners1 {
+     width:330px;
+   }
+   .rcorners2{
+     width:330px;
+   }
  }
   img[id="img1"]{
     display:block;
@@ -83,10 +102,9 @@
     padding-top: 5px;
     padding-bottom: 5px;
   }
-  [id^=t]{
-    width:160px;
-    height:40px;
-    position:relative;
+  .tbox{
+    display:grid;
+    place-items:center;
     left:12.75%;
     bottom:8px;
     border-radius: 25px ;
@@ -133,7 +151,7 @@
     font-weight:bold;
   }
   .modal-container{
-    justify-content:center;
+    place-items:center;
     margin:0;
     width:100%;
     height:22%;
@@ -158,7 +176,14 @@
   margin-left: 35%;
 }
 .filler{
-  height:5.5px;
+  display:none;
+}
+.fillerafter{
+  height:210px;
+  background-image:linear-gradient(#D3D3D3,#454C5A);
+  filter:blur(6px);
+  display:grid;
+  place-items:center;
 }
 #rectangle{
   border-radius: 25px ;
@@ -168,16 +193,10 @@
 #data{
   border-radius: 25px ;
   border:2.5px solid black;
-  width:200px;
-  float:right;
-  margin-right:10px;
 }
 #numbers{
   border-radius: 25px ;
   border:2.5px solid black;
-  width:200px;
-  float:right;
-  margin-right:10px;
 }
 #pn7{
   border-radius: 25px;
@@ -200,29 +219,40 @@
   background-image:linear-gradient(#454C5A 30%,#436A70);
   font-family:'Alegreya Sans SC','Verdana',Serif;
   transition-duration: 1000ms;
+  transition-timing-function:cubic-bezier(0, 2.08, 1, 1);
+}
+.body_vanish{
+  filter:blur(6px);
+  background-image:linear-gradient(#454C5A 30%,#436A70);
+  transition-duration: 1000ms;
   transition-timing-function:ease-in;
 }
-
+}
 </style>
 <script>
 
-function retrieve(){
   const dataset = [
   {food:"Chicken",cal:50},
-  {food:"Pork",cal:100}
+  {food:"Pork",cal:100},
+  {food:"None",cal:0}
 ];
+function retrieve(){
 
 let datanames = document.getElementById('data').value;
 let datanums = document.getElementById('numbers').value;
+
 dataset.push({ food:String (datanames), cal:Number (datanums) });
+localStorage.setItem('MyFoodList', JSON.stringify(dataset) );
+
 console.clear();
 console.log(dataset);
+
 
 let packet1 = document.getElementById("t1").value;
 let extract1 = document.getElementById("t10").value;
 let retrieve1 = dataset.find(element=>element.food===packet1); ///data manipulation
 
-let result1= (retrieve1.cal * extract1); //result (part 1)
+var result1= (retrieve1.cal * extract1); //result (part 1)
 
 let packet2 = document.getElementById("t2").value;
 let extract2 = document.getElementById("t20").value;
@@ -242,21 +272,50 @@ console.log(final); //console
 
 document.getElementById('h7').innerHTML=(final +','+'is the total calorie content');//html
 
-let transform = document.getElementById('h7');
-
-if(transform.value=null){
-   return 0;
-}
-else{
-   transform.classList.add('h7postcalc');
-}
 }
 retrieve();
+
+function transform(){
+  var transform = document.getElementById('h7');
+
+  if(transform.value=null){
+   return 0;
+  }
+  else{
+   transform.classList.add('h7postcalc');
+  }
+}
+transform();
+
+function vanish(){
+  document.getElementById('conter').classList.add('body_vanish');
+  document.getElementById('sub1').classList.add('body_vanish');
+}
+vanish();
+
+function reappear(){
+  document.getElementById('conter').classList.remove('body_vanish');
+  document.getElementById('sub1').classList.remove('body_vanish');
+}
+reappear();
+
+function flexdisp(){
+  document.getElementById('filler').classList.remove('filler');
+  document.getElementById('filler').classList.add('fillerafter');
+}
+flexdisp();
+
+function flexhide(){
+  document.getElementById('filler').classList.add('filler');
+  document.getElementById('filler').classList.remove('fillerafter');
+}
+flexhide();
 
 function displayHide() {
         document.getElementById("pn4").style.display = "none";
    }
 displayHide();
+
 function displayShow() {
     document.getElementById("pn4").style.display = "block";
          } // visibility also hides the element but it still takes space in layout unlick display styles
@@ -266,16 +325,18 @@ function show(){
     document.getElementById("modal-container").style.display ="block";
 }
 show();
+
 function hide(){
     document.getElementById("modal-container").style.display ="none";
 }
 hide();
 </script>
 
+<div class ="w3-container" id="conter">
+
 <button type = "button" onclick = "displayHide()">Hide</button>
 <button type = "button" onclick = "displayShow()">Show</button>
 
-<div class ="w3-container" id="conter">
 <div class = "w3-panel w3-green w3-round" id = "pn1">
   <h1 align ="center"><span class = "w3-myfont"><u>Diet Planner</u></span> </h1>
 </div>
@@ -288,45 +349,53 @@ hide();
 </div>
 
 <div class = "w3-panel w3-border-black w3-opacity min" id = "pn4">
-  <element id = "rcorners1"> <h3>Food-item name : </h3> <br> <input type ="text" id="t1" value="None"></input> </element>
-  <element id = "rcorners2"> <h3>Mass of food item : </h3> <br> <input type ="text" id="t10" value=0></input> </element>
+  <element class = "rcorners1" id="r1"> <h3>Food-item name : </h3> <br> <input type ="text" id="t1" class="tbox"value="None"></input> </element>
+  <element class = "rcorners2" id="r2"> <h3>Mass of food item : </h3> <br> <input type ="text" id="t10" class="tbox" value=0></input> </element>
   </div>
   <br>
 
-<div class = "w3-panel w3-opacity min" id = "pn5">
-  <element id = "rcorners11"> <h3>Food-item name : </h3> <br> <input type ="text" id="t2" value="None"></input> </element>
-  <element id = "rcorners22"> <h3>Mass of food item : </h3> <br> <input type ="text" id="t20" value=0></input> </element>
+
+  <div class = "modal-container" id="modal-container">
+      <div class = "modal w3-animate-top">
+        <p1 class =""id ="rectangle"> Enter the food item and the calorie per gram</p1>
+        <div class = "w3-panel w3-white">
+        </div>  <!--filler,to create spacing-->
+        <p2 align="left">Food-item name :</p2>  <input type ="text" id="data">
+        <br>
+        <br>
+        <p3 align="left">Calorie per gram :</p3> <input type ="text" id="numbers">
+        <br>
+        <br>
+        <button id= "close" onclick='hide();retrieve();reappear();flexhide();' class="button w3-green">
+          Close
+        </button>
+      </div>
+  </div>
+
+  <div id =  "filler" >
 </div>
+
+<div id = "sub1">
+<div class = "w3-panel w3-opacity min" id = "pn5">
+  <element class = "rcorners1" id="r1"> <h3>Food-item name : </h3> <br> <input type ="text" id="t2"class="tbox" value="None"></input> </element>
+  <element class = "rcorners2"id="r2"> <h3>Mass of food item : </h3> <br> <input type ="text" id="t20"class="tbox" value=0></input> </element>
+</div>
+
 <br>
+
 <div class = "w3-panel w3-opacity min" id = "pn6">
-  <element id = "rcorners111"> <h3>Food-item name : </h3> <br> <input type ="text" id="t3" value="None"></input> </element>
-  <element id = "rcorners222"> <h3>Mass of food item : </h3> <br> <input type ="text" id="t30" value=0></input> </element>
+  <element class = "rcorners1" id="r1"> <h3>Food-item name : </h3> <br> <input type ="text" id="t3"class="tbox" value="None"></input> </element>
+  <element class = "rcorners2" id="r2"> <h3>Mass of food item : </h3> <br> <input type ="text" id="t30"class="tbox" value=0></input> </element>
 </div>
 <h7 id="h7"></h7>
 <br>
 <br>
 <br>
-<div class = " w3-panel w3-round" id = "pn7">
-  <button id = "btn1" class =" w3-teal w3-circle w3-myfont" onclick="retrieve()"h4>=</h4></button>
-  <button id = "btn2" class ="w3-green w3-circle w3-myfont" onclick="show()"><h4>+</h4></button>
 </div>
-  <div class = "w3-panel w3-white filler" >
-  </div>
-<div class = "modal-container" id="modal-container">
-    <div class = "modal w3-animate-top">
-      <p1 class =""id ="rectangle"> Enter the food item and the calorie per gram</p1>
-      <div class = "w3-panel w3-white filler">
-      </div>  <!--filler,to create spacing-->
-      <p2 align="left">Food-item name :</p2>  <input type ="text" id="data">
-      <br>
-      <br>
-      <p3 align="left">Calorie per gram :</p3> <input type ="text" id="numbers">
-      <br>
-      <br>
-      <button id= "close" onclick='hide()'&'retrieve()' class="button w3-green">
-        Close
-      </button>
-    </div>
+
+<div class = " w3-panel w3-round" id = "pn7">
+  <button id = "btn1" class =" w3-teal w3-circle w3-myfont" onclick="retrieve();transform();"><h4>=</h4></button>
+  <button id = "btn2" class ="w3-green w3-circle w3-myfont" onclick="show();vanish();flexdisp();"><h4>+</h4></button>
 </div>
 </div>
 
